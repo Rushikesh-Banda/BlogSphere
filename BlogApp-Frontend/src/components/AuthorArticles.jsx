@@ -121,11 +121,11 @@ function AuthorArticles() {
               {article.category}
             </p>
 
-            <p className={`${articleTitle} break-words`}>
+            <p className={`${articleTitle} wrap-break-words`}>
               {article.title}
             </p>
 
-            <p className={`${articleExcerpt} break-words line-clamp-3 overflow-hidden`}>
+            <p className={`${articleExcerpt} wrap-break-words line-clamp-3 overflow-hidden`}>
               {article.content}
             </p>
 
