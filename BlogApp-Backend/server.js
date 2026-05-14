@@ -19,7 +19,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "http://localhost:5174",
-      "https://your-frontend-name.onrender.com",
+      "https://blog-sphere-jade.vercel.app",
     ],
     credentials: true,
   })
@@ -40,7 +40,7 @@ app.use("/admin-api", adminRoute);
 
 app.use("/common-api", commonRouter);
 
-// Connect to DB
+// Connect to MongoDB
 const connectDB = async () => {
 
   try {
@@ -49,10 +49,10 @@ const connectDB = async () => {
 
     console.log("DB connection success");
 
-    // Server Port
+    // Server port
     const PORT = process.env.PORT || 4000;
 
-    // Start HTTP server
+    // Start server
     app.listen(PORT, () =>
       console.log(`server started on port ${PORT}`)
     );
@@ -84,7 +84,7 @@ app.use((err, req, res, next) => {
 
   console.log("Full error:", err);
 
-  // Mongoose validation error
+  // Validation error
   if (err.name === "ValidationError") {
 
     return res.status(400).json({
@@ -93,7 +93,7 @@ app.use((err, req, res, next) => {
     });
   }
 
-  // Mongoose cast error
+  // Cast error
   if (err.name === "CastError") {
 
     return res.status(400).json({
