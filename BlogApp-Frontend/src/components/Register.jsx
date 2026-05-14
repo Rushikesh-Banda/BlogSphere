@@ -39,29 +39,31 @@ function Register() {
   const onUserRegister = async (newUser) => {
 
     setLoading(true);
+    setError(null);
 
     const formData = new FormData();
 
     //get user object
     let { role, profilePic, ...userObj } = newUser;
 
-    console.log("role", role);
-    console.log(profilePic);
+    if (!role) {
+      setError("Please select User or Author");
+      setLoading(false);
+      return;
+    }
 
-    //add all fields except profilePic to FormData object
+    // add all text fields to FormData object
     Object.keys(userObj).forEach((key) => {
       formData.append(key, userObj[key]);
     });
 
-    //added role conversion
-    if (newUser.role === "user") newUser.role = "USER";
-    if (newUser.role === "author") newUser.role = "AUTHOR";
+    const normalizedRole = role === "user" ? "USER" : role === "author" ? "AUTHOR" : "USER";
+    formData.append("role", normalizedRole);
 
-    //add role to formData
-    formData.append("role", newUser.role);
-
-    // add profilePic to FormData object
-    formData.append("profilePic", profilePic[0]);
+    // add profilePic only when a file was selected
+    if (profilePic && profilePic.length > 0) {
+      formData.append("profilePic", profilePic[0]);
+    }
 
     try {
 
@@ -69,12 +71,7 @@ function Register() {
 
         let resObj = await axios.post(
           "http://localhost:4000/user-api/users",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
+          formData
         );
 
         if (resObj.status === 201) {
@@ -86,12 +83,7 @@ function Register() {
 
         let resObj = await axios.post(
           "http://localhost:4000/author-api/users",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
+          formData
         );
 
         console.log("res obj is ", resObj);

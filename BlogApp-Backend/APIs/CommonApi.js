@@ -8,19 +8,36 @@ import { verifyToken } from "../Middlewares/verifytoken.js";
 export const commonRouter = exp.Router();
 
 //login
+//login
 commonRouter.post("/login", async (req, res) => {
-  //get user cred object
-  let userCred = req.body;
-  //call authenticate service
-  let { token, user } = await authenticate(userCred);
-  //save tokan as httpOnly cookie
-  res.cookie("token", token, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: false,
-  });
-  //send res
-  res.status(200).json({ message: "login success", payload: user });
+  try {
+
+    //get user cred object
+    let userCred = req.body;
+
+    //call authenticate service
+    let { token, user } = await authenticate(userCred);
+
+    //save token as httpOnly cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: false,
+    });
+
+    //send res
+    res.status(200).json({
+      message: "login success",
+      payload: user
+    });
+
+  } catch (err) {
+
+    res.status(err.status || 500).json({
+      error: err.message || "Login failed",
+    });
+
+  }
 });
 
 //logout for User, Author and Admin

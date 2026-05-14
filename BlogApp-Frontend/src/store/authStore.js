@@ -32,7 +32,7 @@ export const useAuth = create((set) => ({
       });
 
     } catch (err) {
-      console.log("err is ", err);
+      console.log(err.response?.data);
 
       set({
         loading: false,

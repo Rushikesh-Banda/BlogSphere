@@ -14,7 +14,10 @@ config(); //process.env
 const app = exp();
 
 //use cors middleware (merged into one correct config)
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(cors({
+  origin: ["http://localhost:5173", "http://localhost:5174"],
+  credentials: true,
+})); 
 
 //add body parser middleware
 app.use(exp.json());
