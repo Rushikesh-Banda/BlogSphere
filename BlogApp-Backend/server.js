@@ -97,9 +97,11 @@ app.use((err, req, res, next) => {
     });
   }
 
-  // default server error
+  // default server error - send actual error details for debugging
+  console.error("UNHANDLED ERROR:", err.stack);
   res.status(500).json({
     message: "error occurred",
-    error: "Server side error",
+    error: err.message || "Server side error",
+    details: process.env.NODE_ENV === "development" ? err.stack : undefined,
   });
 });

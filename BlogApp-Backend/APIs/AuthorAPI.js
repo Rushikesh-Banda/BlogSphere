@@ -3,57 +3,37 @@ import { register } from "../services/authService.js";
 import { ArticleModel } from "../models/ArticleModel.js";
 import { checkAuthor } from "../Middlewares/CheckAuthor.js";
 import { verifyToken } from "../Middlewares/verifytoken.js";
-import upload from "../config/multer.js";
-import cloudinary from "../config/cloudinary.js";
-import { uploadToCloudinary } from "../config/cloudinaryupload.js";
 
 export const authorRoute = exp.Router();
 
 //Register author(public)
-authorRoute.post(
-  "/users",
-  upload.single("profilePic"),
-  async (req, res, next) => {
+authorRoute.post("/users", async (req, res, next) => {
+  try {
+    //get user obj from req
+    let userObj = req.body;
 
-    let cloudinaryResult;
+    console.log("📝 Author Registration Request:");
+    console.log("Body:", userObj);
 
-    try {
+    //call register
+    console.log("Registering user with role: AUTHOR");
+    const newUserObj = await register({
+      ...userObj,
+      role: "AUTHOR",
+    });
 
-      //get user obj from req
-      let userObj = req.body;
+    console.log("✅ Author registered successfully:", newUserObj._id);
 
-      console.log(req.body);
-      console.log(req.file);
-
-      //upload image to cloudinary
-      if (req.file) {
-        cloudinaryResult = await uploadToCloudinary(req.file.buffer);
-      }
-
-      //call register
-      const newUserObj = await register({
-        ...userObj,
-        role: "AUTHOR",
-        profileImageUrl: cloudinaryResult?.secure_url,
-      });
-
-      //send res
-      res.status(201).json({
-        message: "author created",
-        payload: newUserObj,
-      });
-
-    } catch (err) {
-
-      //rollback uploaded image if db save fails
-      if (cloudinaryResult?.public_id) {
-        await cloudinary.uploader.destroy(cloudinaryResult.public_id);
-      }
-
-      next(err);
-    }
+    //send res
+    res.status(201).json({
+      message: "author created",
+      payload: newUserObj,
+    });
+  } catch (err) {
+    console.error("❌ Author registration error:", err.message);
+    next(err);
   }
-);
+});
 
 //Create article(protected route)
 authorRoute.post("/articles", verifyToken("AUTHOR"), async (req, res) => {
