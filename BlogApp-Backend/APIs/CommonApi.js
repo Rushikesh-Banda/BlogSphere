@@ -86,36 +86,13 @@ commonRouter.put("/change-password", async (req, res) => {
 
 
 //check authentication
-commonRouter.get("/check-auth", async (req, res) => {
-  try {
-
-    const token = req.cookies?.token;
-
-    if (!token) {
-      return res.status(401).json({ message: "Not authenticated" });
-    }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    const user = await UserTypeModel.findById(decoded.userId).select("-password");
-
-    if (!user) {
-      return res.status(401).json({ message: "User not found" });
-    }
-
+commonRouter.get(
+  "/check-auth",
+  verifyToken("USER","AUTHOR","ADMIN"),
+  (req, res) => {
     res.status(200).json({
-      message: "Authenticated",
-      payload: user,
+      message: "authenticated",
+      payload: req.user,
     });
-
-  } catch (err) {
-    res.status(401).json({ message: "Invalid token" });
   }
-  //page refresh
-  commonRouter.get("/check-auth",verifyToken("USER","AUTHOR","ADMIN"),(req,res)=>{
-    res.status(200).json({
-      message:"authenticated",
-      payload: req.user
-    });
-  });
-});
+);
