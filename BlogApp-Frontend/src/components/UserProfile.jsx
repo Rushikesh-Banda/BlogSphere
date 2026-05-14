@@ -15,6 +15,11 @@ import {
   timestampClass,
 } from "../styles/common.js";
 
+const BASE_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:4000"
+    : "https://blogsphere-mv7l.onrender.com";
+
 function UserProfile() {
 
   const logout = useAuth((state) => state.logout);
@@ -38,7 +43,7 @@ function UserProfile() {
       try {
 
         const res = await axios.get(
-          "http://localhost:4000/user-api/articles",
+          `${BASE_URL}/user-api/articles`,
           { withCredentials: true }
         );
 
@@ -87,6 +92,7 @@ function UserProfile() {
   };
 
   if (loading) {
+
     return (
       <p className={loadingClass}>
         Loading articles...
@@ -98,7 +104,11 @@ function UserProfile() {
 
     <div>
 
-      {error && <p className={errorClass}>{error}</p>}
+      {error && (
+        <p className={errorClass}>
+          {error}
+        </p>
+      )}
 
       {/* PROFILE SECTION */}
       <div className="flex justify-between items-center px-6 py-4">

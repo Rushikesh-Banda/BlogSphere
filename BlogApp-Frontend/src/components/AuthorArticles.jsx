@@ -14,6 +14,11 @@ import {
   emptyStateClass,
 } from "../styles/common";
 
+const BASE_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:4000"
+    : "https://blogsphere-mv7l.onrender.com";
+
 function AuthorArticles() {
 
   const navigate = useNavigate();
@@ -37,7 +42,7 @@ function AuthorArticles() {
       try {
 
         const res = await axios.get(
-          `http://localhost:4000/author-api/articles/${user._id}`,
+          `${BASE_URL}/author-api/articles/${user._id}`,
           { withCredentials: true }
         );
 

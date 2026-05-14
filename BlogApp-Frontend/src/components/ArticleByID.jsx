@@ -19,6 +19,11 @@ import {
   errorClass,
 } from "../styles/common.js";
 
+const BASE_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:4000"
+    : "https://blogsphere-mv7l.onrender.com";
+
 function ArticleByID() {
   const { id } = useParams();
   const location = useLocation();
@@ -37,18 +42,21 @@ function ArticleByID() {
       setLoading(true);
 
       try {
-        const res = await axios.get(`http://localhost:4000/user-api/article/${id}`, { withCredentials: true });
+        const res = await axios.get(
+          `${BASE_URL}/user-api/article/${id}`,
+          { withCredentials: true }
+        );
 
         setArticle(res.data.payload);
       } catch (err) {
-        setError(err.response?.data?.error);
+        setError(err.response?.data?.error || "Failed to fetch article");
       } finally {
         setLoading(false);
       }
     };
 
     getArticle();
-  }, [id,article]);
+  }, [id, article]);
 
   const formatDate = (date) => {
     return new Date(date).toLocaleString("en-IN", {
@@ -61,11 +69,14 @@ function ArticleByID() {
   // delete article
   const deleteArticle = async () => {
     try {
-      await axios.delete(`http://localhost:4000/author-api/article/${id}`, { withCredentials: true });
+      await axios.delete(
+        `${BASE_URL}/author-api/article/${id}`,
+        { withCredentials: true }
+      );
 
       navigate("/author-profile");
     } catch (err) {
-      setError(err.response?.data?.error);
+      setError(err.response?.data?.error || "Failed to delete article");
     }
   };
 
@@ -83,10 +94,14 @@ function ArticleByID() {
       <div className={articleHeader}>
         <span className={articleCategory}>{article.category}</span>
 
-        <h1 className={`${articleMainTitle} uppercase`}>{article.title}</h1>
+        <h1 className={`${articleMainTitle} uppercase`}>
+          {article.title}
+        </h1>
 
         <div className={articleAuthorRow}>
-          <div className={authorInfo}>{article.author?.firstName || "Author"}</div>
+          <div className={authorInfo}>
+            {article.author?.firstName || "Author"}
+          </div>
 
           <div>{formatDate(article.createdAt)}</div>
         </div>
@@ -98,18 +113,26 @@ function ArticleByID() {
       {/* AUTHOR actions */}
       {user?.role === "AUTHOR" && (
         <div className={articleActions}>
-          <button className={editBtn} onClick={() => editArticle(article)}>
+          <button
+            className={editBtn}
+            onClick={() => editArticle(article)}
+          >
             Edit
           </button>
 
-          <button className={deleteBtn} onClick={deleteArticle}>
+          <button
+            className={deleteBtn}
+            onClick={deleteArticle}
+          >
             Delete
           </button>
         </div>
       )}
 
       {/* Footer */}
-      <div className={articleFooter}>Last updated: {formatDate(article.updatedAt)}</div>
+      <div className={articleFooter}>
+        Last updated: {formatDate(article.updatedAt)}
+      </div>
     </div>
   );
 }

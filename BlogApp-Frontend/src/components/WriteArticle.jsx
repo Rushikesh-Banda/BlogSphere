@@ -14,12 +14,21 @@ import {
   errorClass,
   loadingClass,
 } from "../styles/common.js";
+
 import { useAuth } from "../store/authStore";
 
+const BASE_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:4000"
+    : "https://blogsphere-mv7l.onrender.com";
+
 function WriteArticle() {
+
   const navigate = useNavigate();
+
   const [loading, setLoading] = useState(false);
-  const currentUser=useAuth(state=>state.currentUser)
+
+  const currentUser = useAuth(state => state.currentUser);
 
   const {
     register,
@@ -29,13 +38,16 @@ function WriteArticle() {
   } = useForm();
 
   const submitArticle = async (articleObj) => {
+
     setLoading(true);
 
-    //add authorId to articleObj
-    articleObj.author=currentUser._id;
+    // add authorId to articleObj
+    articleObj.author = currentUser._id;
+
     try {
+
       await axios.post(
-        "http://localhost:4000/author-api/articles",
+        `${BASE_URL}/author-api/articles`,
         articleObj,
         { withCredentials: true }
       );
@@ -47,21 +59,34 @@ function WriteArticle() {
       navigate("/author-profile/articles");
 
     } catch (err) {
-      toast.error(err.response?.data?.error || "Failed to publish article");
+
+      toast.error(
+        err.response?.data?.error ||
+        "Failed to publish article"
+      );
+
     } finally {
+
       setLoading(false);
     }
   };
 
   return (
+
     <div className={formCard}>
-      <h2 className={formTitle}>Write New Article</h2>
+
+      <h2 className={formTitle}>
+        Write New Article
+      </h2>
 
       <form onSubmit={handleSubmit(submitArticle)}>
 
         {/* Title */}
         <div className={formGroup}>
-          <label className={labelClass}>Title</label>
+
+          <label className={labelClass}>
+            Title
+          </label>
 
           <input
             type="text"
@@ -77,13 +102,19 @@ function WriteArticle() {
           />
 
           {errors.title && (
-            <p className={errorClass}>{errors.title.message}</p>
+            <p className={errorClass}>
+              {errors.title.message}
+            </p>
           )}
+
         </div>
 
         {/* Category */}
         <div className={formGroup}>
-          <label className={labelClass}>Category</label>
+
+          <label className={labelClass}>
+            Category
+          </label>
 
           <select
             className={inputClass}
@@ -91,21 +122,43 @@ function WriteArticle() {
               required: "Category is required",
             })}
           >
-            <option value="">Select category</option>
-            <option value="technology">Technology</option>
-            <option value="programming">Programming</option>
-            <option value="ai">AI</option>
-            <option value="web-development">Web Development</option>
+
+            <option value="">
+              Select category
+            </option>
+
+            <option value="technology">
+              Technology
+            </option>
+
+            <option value="programming">
+              Programming
+            </option>
+
+            <option value="ai">
+              AI
+            </option>
+
+            <option value="web-development">
+              Web Development
+            </option>
+
           </select>
 
           {errors.category && (
-            <p className={errorClass}>{errors.category.message}</p>
+            <p className={errorClass}>
+              {errors.category.message}
+            </p>
           )}
+
         </div>
 
         {/* Content */}
         <div className={formGroup}>
-          <label className={labelClass}>Content</label>
+
+          <label className={labelClass}>
+            Content
+          </label>
 
           <textarea
             rows="8"
@@ -121,19 +174,30 @@ function WriteArticle() {
           />
 
           {errors.content && (
-            <p className={errorClass}>{errors.content.message}</p>
+            <p className={errorClass}>
+              {errors.content.message}
+            </p>
           )}
+
         </div>
 
         {/* Submit */}
-        <button className={submitBtn} type="submit" disabled={loading}>
+        <button
+          className={submitBtn}
+          type="submit"
+          disabled={loading}
+        >
           {loading ? "Publishing..." : "Publish Article"}
         </button>
 
         {loading && (
-          <p className={loadingClass}>Publishing article...</p>
+          <p className={loadingClass}>
+            Publishing article...
+          </p>
         )}
+
       </form>
+
     </div>
   );
 }
