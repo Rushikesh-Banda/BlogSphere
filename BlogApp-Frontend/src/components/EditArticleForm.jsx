@@ -42,7 +42,11 @@ function EditArticle() {
   const updateArticle = async (data) => {
     console.log(data);
     data.articleId = article._id;
-    let res = await axios.put("http://localhost:4000/author-api/articles", data, { withCredentials: true });
+    let res = await axios.put(
+  `http://localhost:4000/author-api/articles/${article._id}`,
+  data,
+  { withCredentials: true }
+);
     console.log("res update atricle", res);
 
     toast.success("Article updated successfully");

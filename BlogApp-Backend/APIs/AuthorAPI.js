@@ -105,9 +105,8 @@ authorRoute.put("/articles", verifyToken("AUTHOR"), async (req, res) => {
 
   //find article
   let articleOfDB = await ArticleModel.findOne({
-    _id: articleId,
-    author: author,
-  });
+  _id: articleId,
+});
 
   if (!articleOfDB) {
     return res.status(401).json({

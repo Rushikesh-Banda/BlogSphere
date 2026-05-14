@@ -52,7 +52,7 @@ function Header() {
 
         {/* Logo */}
         <NavLink to="/" className={navBrandClass}>
-          BLOG APP
+          BLOGSPHERE
         </NavLink>
 
         <ul className={navLinksClass}>
