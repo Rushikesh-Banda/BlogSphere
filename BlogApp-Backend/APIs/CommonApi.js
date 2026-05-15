@@ -109,10 +109,15 @@ commonRouter.put("/change-password", async (req, res) => {
 commonRouter.get(
   "/check-auth",
   verifyToken("USER","AUTHOR","ADMIN"),
-  (req, res) => {
-    res.status(200).json({
-      message: "authenticated",
-      payload: req.user,
-    });
+  async (req, res) => {
+    try {
+      const user = await UserTypeModel.findById(req.user.userId).select("-password");
+      res.status(200).json({
+        message: "authenticated",
+        payload: user,
+      });
+    } catch (err) {
+      res.status(500).json({ message: "Server error", error: err.message });
+    }
   }
 );
