@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import RootLayout from "./components/RootLayout";
 import Register from "./components/Register";
 import Login from "./components/Login";
+import ForgotPassword from "./components/ForgotPassword";
 import Home from "./components/Home";
 import UserProfile from "./components/UserProfile";
 import AuthorProfile from "./components/AuthorProfile";
@@ -29,6 +30,10 @@ function App() {
         {
           path: "login",
           element: <Login />,
+        },
+        {
+          path: "forgot-password",
+          element: <ForgotPassword />,
         },
         {
           path: "user-profile",

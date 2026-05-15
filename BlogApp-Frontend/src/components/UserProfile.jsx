@@ -116,15 +116,6 @@ function UserProfile() {
         {/* PROFILE IMAGE + NAME */}
         <div className="flex items-center gap-3">
 
-          <img
-            src={
-              currentUser?.profileImageUrl ||
-              "https://via.placeholder.com/80"
-            }
-            alt="profile"
-            className="w-16 h-16 rounded-full object-cover border"
-          />
-
           <div>
 
             <h2 className="text-xl font-bold">
@@ -150,6 +141,7 @@ function UserProfile() {
       </div>
 
       {/* ARTICLES */}
+      <h2 className="text-2xl font-bold px-6 py-2">Articles</h2>
       <div className={articleGrid}>
 
         {articles.map((articleObj) => (

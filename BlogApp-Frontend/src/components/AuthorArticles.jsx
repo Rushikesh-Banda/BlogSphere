@@ -33,7 +33,7 @@ function AuthorArticles() {
 
   useEffect(() => {
 
-    if (!user) return;
+    if (!user || user.role !== 'AUTHOR') return;
 
     const getAuthorArticles = async () => {
 
@@ -50,10 +50,12 @@ function AuthorArticles() {
 
       } catch (err) {
 
-        console.log(err);
+        console.log("Error fetching articles:", err);
+
+        console.log("Error response:", err.response);
 
         setError(
-          err.response?.data?.error || "Failed to fetch articles"
+          err.response?.data?.error || err.response?.data?.message || "Failed to fetch articles"
         );
 
       } finally {
@@ -81,19 +83,33 @@ function AuthorArticles() {
     });
   };
 
-  if (loading)
+  if (!user) {
+
     return (
-      <p className={loadingClass}>
-        Loading articles...
+
+      <p className={errorClass}>
+
+        Please log in to view your articles.
+
       </p>
+
     );
 
-  if (error)
+  }
+
+  if (user.role !== 'AUTHOR') {
+
     return (
+
       <p className={errorClass}>
-        {error}
+
+        You need to be an author to view this page.
+
       </p>
+
     );
+
+  }
 
   if (articles.length === 0) {
 
