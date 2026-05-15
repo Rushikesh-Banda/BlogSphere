@@ -69,14 +69,15 @@ function ArticleByID() {
   // delete article
   const deleteArticle = async () => {
     try {
-      await axios.delete(
-        `${BASE_URL}/author-api/article/${id}`,
+      await axios.patch(
+        `${BASE_URL}/author-api/articles/${id}/status`,
+        { isArticleActive: false },
         { withCredentials: true }
       );
 
       navigate("/author-profile");
     } catch (err) {
-      setError(err.response?.data?.error || "Failed to delete article");
+      setError(err.response?.data?.message || err.response?.data?.error || "Failed to delete article");
     }
   };
 
