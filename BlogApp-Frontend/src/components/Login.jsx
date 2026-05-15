@@ -68,9 +68,9 @@ function Login() {
 
           {/* Forgot password */}
           <div className="text-right -mt-2 mb-4">
-            <a href="/forgot-password" className={`${linkClass} text-xs`}>
+            <NavLink to="/forgot-password" className={`${linkClass} text-xs`}>
               Forgot password?
-            </a>
+            </NavLink>
           </div>
 
           {/* Submit */}
