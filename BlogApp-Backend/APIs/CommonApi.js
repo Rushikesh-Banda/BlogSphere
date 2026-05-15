@@ -21,8 +21,8 @@ commonRouter.post("/login", async (req, res) => {
     //save token as httpOnly cookie
     res.cookie("token", token, {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false,
+      sameSite: "none",
+      secure: true,
     });
 
     //send res
@@ -45,8 +45,8 @@ commonRouter.get("/logout", (req, res) => {
   // Clear the cookie named 'token'
   res.clearCookie("token", {
     httpOnly: true,
-    secure: false,
-    sameSite: "lax",
+    sameSite: "none",
+    secure: true,
   });
 
   res.status(200).json({ message: "Logged out successfully" });
